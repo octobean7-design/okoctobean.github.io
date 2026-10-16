@@ -18,28 +18,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Find and Build
+      - name: Build Debug APK
         run: |
-          # Ищем папку android в репозитории
-          ANDROID_DIR=$(find . -type d -name "android" | head -n 1)
-          echo "Found android dir: $ANDROID_DIR"
-          
-          # Переходим в родительскую папку андроида и ставим зависимости, если есть package.json
-          PARENT_DIR=$(dirname "$ANDROID_DIR")
-          if [ -f "$PARENT_DIR/package.json" ]; then
-            cd "$PARENT_DIR"
-            npm install
-            npx cap sync
-            cd -
-          fi
-          
-          # Собираем APK
-          cd "$ANDROID_DIR"
+          cd bez_paniki_android_studio_project/app/..
+          # переходим в папку, где лежит gradlew (обычно внутри android или корня проекта)
+          # если gradlew лежит внутри app или рядом с ним:
+          find . -name "gradlew"
+          # Запускаем сборку из папки, где найден gradlew
+          GRADLE_DIR=$(dirname $(find . -name "gradlew" | head -n 1))
+          cd "$GRADLE_DIR"
           chmod +x gradlew
           ./gradlew assembleDebug
 
