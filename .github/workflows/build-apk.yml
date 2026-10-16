@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install dependencies & Build web assets
+        run: |
+          cd bez_paniki_android_studio_project
+          npm install
+          npx cap sync
+
       - name: Build Debug APK
         run: |
           cd bez_paniki_android_studio_project/android
